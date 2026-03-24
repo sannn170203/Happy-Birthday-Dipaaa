@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spesial Buat Dipaaa</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    
+    <style>
+        :root {
+            --maroon-dark: #3a0202;
+            --maroon-light: #800000;
+            --gold-accent: #d4af37;
+            --soft-white: #f5f5f5;
+            --paper-color: #fcfaf0; 
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--maroon-dark) 0%, var(--maroon-light) 50%, var(--maroon-dark) 100%);
+            height: 100%; width: 100%;
+            overflow: hidden !important;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* --- LOGIN SCREEN --- */
+        #login-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--maroon-dark);
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: 9999;
+            transition: all 1s ease-in-out;
+        }
+
+        .login-title { color: var(--gold-accent); margin-bottom: 20px; letter-spacing: 2px; text-align: center; font-size: 1rem; }
+        .pin-dots { display: flex; gap: 15px; margin-bottom: 40px; }
+        .dot { width: 15px; height: 15px; border: 2px solid var(--gold-accent); border-radius: 50%; transition: 0.2s; }
+        .dot.active { background: var(--gold-accent); box-shadow: 0 0 10px var(--gold-accent); }
+
+        .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .num-btn {
+            width: 70px; height: 70px; border: 1px solid rgba(212, 175, 55, 0.5); border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 1.5rem; color: var(--soft-white); cursor: pointer; transition: 0.3s;
+            user-select: none;
+        }
+        .num-btn:active { background: var(--gold-accent); color: var(--maroon-dark); }
+
+        /* --- BUKU 3D STYLE --- */
+        #main-container {
+            width: 100%; height: 100%;
+            display: none; justify-content: center; align-items: center;
+            perspective: 1000px;
+        }
+
+        .swiper {
+            width: 320px;
+            height: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        }
+
+        @media (min-width: 768px) {
+            .swiper { width: 400px; height: 550px; }
+        }
+
+        .swiper-slide {
+            background-color: var(--paper-color);
+            border-radius: 5px;
+            padding: 40px;
+            box-sizing: border-box;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center;
+            border-left: 10px solid #2a0202;
+        }
+
+        .swiper-slide.cover {
+            background: linear-gradient(135deg, #4a0404 0%, #3a0202 100%);
+            color: var(--gold-accent);
+            border: 2px solid var(--gold-accent);
+            border-left: 15px solid #2a0202;
+        }
+
+        h1 { font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: var(--gold-accent); margin-bottom: 10px; }
+        p { font-size: 1rem; line-height: 1.6; color: #444; }
+        .cover p { color: var(--gold-accent); opacity: 0.8; }
+        .divider { width: 60px; height: 2px; background: var(--gold-accent); margin: 20px auto; }
+
+        .gift-icon { font-size: 80px; cursor: pointer; animation: shake 1.2s infinite; display: inline-block; }
+        @keyframes shake { 0%, 100% { transform: scale(1) rotate(0); } 20% { transform: scale(1.1) rotate(5deg); } 40% { transform: scale(1.1) rotate(-5deg); } }
+
+        /* MODAL */
+        .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); }
+        .modal-content { 
+            background: linear-gradient(to bottom, #4a0404, #2d0202); 
+            margin: 10vh auto; padding: 40px; border-radius: 25px; 
+            border: 2px solid var(--gold-accent); width: 85%; max-width: 400px; text-align: center; color: white;
+            position: relative;
+        }
+
+        #music-btn { position: fixed; top: 20px; right: 20px; z-index: 2000; background: var(--gold-accent); border: none; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; font-size: 20px; }
+    </style>
+</head>
+<body>
+
+    <div id="login-overlay">
+        <div class="login-title">Enter Your Date of Birth</div>
+        <div class="pin-dots">
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <div class="numpad">
+            <div class="num-btn" onclick="pressNum('1')">1</div><div class="num-btn" onclick="pressNum('2')">2</div><div class="num-btn" onclick="pressNum('3')">3</div>
+            <div class="num-btn" onclick="pressNum('4')">4</div><div class="num-btn" onclick="pressNum('5')">5</div><div class="num-btn" onclick="pressNum('6')">6</div>
+            <div class="num-btn" onclick="pressNum('7')">7</div><div class="num-btn" onclick="pressNum('8')">8</div><div class="num-btn" onclick="pressNum('9')">9</div>
+            <div style="width:70px"></div><div class="num-btn" onclick="pressNum('0')">0</div><div class="num-btn" onclick="clearPin()" style="font-size: 1rem;">CLR</div>
+        </div>
+        <p id="error-msg" style="color: #ff4d4d; margin-top: 20px; display: none;">Passcode Salah!</p>
+    </div>
+
+    <button id="music-btn" onclick="toggleMusic()">🎵</button>
+    
+    <audio id="myAudio" loop preload="auto">
+        <source src="anything.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="main-container">
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide cover">
+                    <h1>Spesial Buat Dipaaa</h1>
+                    <div class="divider"></div>
+                    <p>Geser ke kiri untuk membuka...</p>
+                </div>
+                <div class="swiper-slide">
+                    <h1>Halo, Dipaaa...</h1>
+                    <div class="divider"></div>
+                    <p>Buku ini adalah caraku untuk merayakan hari spesialmu meskipun jarak memisahkan kita.</p>
+                </div>
+                <div class="swiper-slide">
+                    <h1>Selamat Ulang Tahun!</h1>
+                    <p>Semoga bahagia selalu menyertaimu. Teruslah menjadi orang baik yang aku kenal.</p>
+                </div>
+                <div class="swiper-slide">
+                    <h1>Tentang Kita</h1>
+                    <p>Meskipun baru lewat layar, setiap obrolan kita sangat berarti bagiku. Aku menghargai setiap waktu kita.</p>
+                </div>
+                <div class="swiper-slide">
+                    <h1>Satu Janji</h1>
+                    <p>Aku akan terus berjuang sampai akhirnya kita bisa bertemu secara nyata. Tunggu aku ya!</p>
+                </div>
+                <div class="swiper-slide cover">
+                    <h1>Hadiah Kecil...</h1>
+                    <p>Klik kadonya di bawah ini!</p>
+                    <div class="gift-icon" onclick="openGift()">🎁</div>
+                    <p style="margin-top: 20px; font-size: 0.8rem;">— Hasan —</p>
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+
+    <div id="giftModal" class="modal">
+        <div class="modal-content">
+            <span style="float:right; cursor:pointer; font-size: 2rem;" onclick="closeGift()">&times;</span>
+            <h2 style="font-family: 'Dancing Script'; color: var(--gold-accent);">Pesan Rahasia</h2>
+            <div class="divider"></div>
+            <p style="font-style: italic;">"Selamat ulang tahun, Dipaaa. Terima kasih sudah ada. Aku sangat merindukanmu! ❤️"</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        const correctPin = "250304"; 
+        let currentPin = "";
+        const dots = document.querySelectorAll('.dot');
+        const audio = document.getElementById("myAudio");
+        const btn = document.getElementById("music-btn");
+
+        function pressNum(num) {
+            if (currentPin.length < 6) {
+                currentPin += num;
+                updateDots();
+                if (currentPin.length === 6) { checkPin(); }
+            }
+        }
+
+        function updateDots() {
+            dots.forEach((dot, index) => {
+                if (index < currentPin.length) dot.classList.add('active');
+                else dot.classList.remove('active');
+            });
+        }
+
+        function clearPin() { currentPin = ""; updateDots(); }
+
+        function checkPin() {
+            if (currentPin === correctPin) {
+                // Musik otomatis jalan saat login berhasil
+                audio.play().then(() => {
+                    btn.innerHTML = "⏸️";
+                }).catch(e => {
+                    console.log("Autoplay dicegah browser, musik butuh interaksi user.");
+                });
+
+                document.getElementById('login-overlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('login-overlay').style.display = 'none';
+                    document.getElementById('main-container').style.display = 'flex';
+                    initSwiper();
+                }, 1000);
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('error-msg').style.display = 'none';
+                    clearPin();
+                }, 1000);
+            }
+        }
+
+        function initSwiper() {
+            new Swiper(".mySwiper", {
+                effect: "cube",
+                grabCursor: true,
+                cubeEffect: { shadow: true, slideShadows: true, shadowOffset: 20, shadowScale: 0.94 },
+                pagination: { el: ".swiper-pagination" },
+            });
+        }
+
+        function openGift() { document.getElementById("giftModal").style.display = "block"; }
+        function closeGift() { document.getElementById("giftModal").style.display = "none"; }
+        
+        function toggleMusic() {
+            if (audio.paused) { audio.play(); btn.innerHTML = "⏸️"; }
+            else { audio.pause(); btn.innerHTML = "🎵"; }
+        }
+    </script>
+</body>
+</html>
